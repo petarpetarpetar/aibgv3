@@ -26,7 +26,7 @@ def init_game(train: bool, _bot_vs_bot: bool, _game_id: int, _player_id: int):
     global game_id
     global player_id
 
-    url = "http://localhost:8080/" + "train" if train else ""
+    url = "http://localhost:8080/" + "train/" if train else ""
     game_id = _game_id
     player_id = _player_id
 
