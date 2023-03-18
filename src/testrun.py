@@ -7,7 +7,7 @@ from direction import Direction
 import map
 import time
 from petar import run_BFS
-
+from player import Player
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -36,9 +36,24 @@ def main():
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
     mapa = get_map(game_obj)
     print("gameId: ", game_obj.get("gameId"))
-    print(mapa.get_neighbor(mapa.tiles[0,0], 3))
-    run_BFS(mapa.tiles[0,0],mapa.tiles[2, 0], mapa)
+    
+    player1 = Player(game_obj.get("player1"))
+    player2 = Player(game_obj.get("player2"))
+    our_player = player1
+    enemy_player = player2
+    if player2.team_name == "xepoju":
+        enemy_player = player1
 
+    cilj_x = 25
+    cilj_y = 0
+    iter = 0
+    step = run_BFS(mapa.tiles[0,0],mapa.tiles[cilj_x, cilj_y], mapa, (enemy_player.x, enemy_player.y))
+    while True:
+        print("move")
+        print(f"{step}")
+        step = run_BFS(mapa.tiles[step.row,step.column],mapa.tiles[cilj_x, cilj_y], mapa, (enemy_player.x, enemy_player.y))
+        if step is None:
+            break
 
 if __name__ == "__main__":
     main()
