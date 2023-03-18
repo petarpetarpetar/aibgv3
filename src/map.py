@@ -39,16 +39,18 @@ class Map:
                 neighbours.append(self.tiles[x, y])
         return neighbours
 
-    def get_neighbor(cursor: Tile, direction: int, _map: None) -> Tile:
+    def get_neighbor(self, cursor: Tile, direction: int, _map: None) -> Tile:
+        x, y = cursor.row, cursor.column
+        nb.set_x_y(x, y)
         if direction == 0:
-            pass
+            return self.tiles[nb.neighbour_up_position()]
         elif direction == 1:
-            pass
+            return self.tiles[nb.neighbour_upper_right_position()]
         elif direction == 2:
-            pass
+            return self.tiles[nb.neighbour_down_right_position()]
         elif direction == 3:
-            pass
+            return self.tiles[nb.neighbour_down_position()]
         elif direction == 4:
-            pass
+            return self.tiles[nb.neighbour_down_left_position()]
         elif direction == 5:
-            pass
+            return self.tiles[nb.neighbour_upper_left_position()]
