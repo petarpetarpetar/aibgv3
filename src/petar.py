@@ -28,6 +28,10 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
     bfs[start.row, start.column] = -1
     visited = []
 
+    def temp(x,y):
+        return bfs[x,y]
+    def score(a):
+        return bfs[a.row, a.column]
     found_end = False
 
     for iteration in range(1, 10):
@@ -71,35 +75,38 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
         print("cant get there or already there")
         return None
 
-    # run komsije
-
-    # start = end
-
-    # for dir in range(6):
-    #     current = _map.get_neighbor(current, dir)
-    #     if bfs[current.row, current.column]
 
     num_steps = bfs[end.row, end.column]
-
+    print(f"{num_steps=}")
     if num_steps <= 0:
         print("cant get there or already there")
         return None
     else:
         current = end
         candidate_list = []
-        flag_found_move = False
+        flag_found_moves = False
         definite = None
 
         if bfs[end.row, end.column] == 1:  # mozes odmah na pocetku da dodjes tu
             potential = end
-            flag_found_move = True
+            flag_found_moves = True
             definite = potential
             print("pa mozes odma")
             return definite
+        
+        moves=[]
 
-        while not flag_found_move:
+        while not flag_found_moves:
+            connected = False
             for direction in range(0, 6):
                 candidate: Tile = _map.get_neighbor(current, direction)
+                print()
+                print("current ", current, f"({temp(current.row, current.column)})")
+                print("candidate", candidate, end=" ")
+
+                if moves != []:
+                    if score(moves[-1]) == -1:
+                        flag_found_moves = True
                 if candidate is None:
                     continue
 
@@ -108,26 +115,58 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                     if candidate not in candidate_list and candidate not in visited:
                         candidate_list.append(candidate)
                         visited.append(candidate)
+                        # print("good")
+                else:
+                    pass
+                    # print("shit")
+                
+                print("candidate_list: ", end=" ")
+                for cand in candidate_list:
+                    print(cand, f"({temp(cand.row, cand.column)})", end=" ||")
+                    if temp(cand.row, cand.column) < temp(current.row, current.column):
+                        moves.append(cand)
+                        if score(cand) == -1:
+                            flag_found_moves = True
+                            return moves
+                        current = cand
+                        connected = True
+                        break
+                
+                print("moves: ", end=" ")
+                [print(x, f"({temp(x.row, x.column)})", end=" |") for x in moves]
 
-            potential: Tile = None
-            for potential in candidate_list:
-                if bfs[potential.row, potential.column] < bfs[current.row, current.column]:
-                    current = potential
-                    if bfs[potential.row, potential.column] == 1:
-                        flag_found_move = True  # u sledecem ces moci da dodjes do pocetne tacke
-                    break  # TODO: RANDOM
+            if not connected:
+                
+                if score(cand) == -1:
+                    flag_found_moves = True
+                    return moves
+                
+                print("NOT CONNECTED")
+                found = False
+                if found:
+                    print("found mOOVE")
+                    current = moves[-1]
+                    continue
+                for dir in range(6):
+                    start = moves[-1]
+                    while True:
+                        test = _map.get_neighbor(start, dir)
+                        if test is None:
+                            break
+                        print("test,", test, f"({temp(test.row, test.column)})")
+                        if score(test) > score(start) or score(test) == -5:
+                            break
+                        if score(test) < score(start):
+                            moves.append(test)
+                            if score(cand) == -1:
+                                flag_found_moves = True
+                                return moves
+                            found = True
+                            break
 
-            if flag_found_move:
-                definite = potential
-                break
+                        start = test
 
-            if candidate_list != [] and not flag_found_move:
-                # current = random.choice(candidate_list)
-                # candidate_list.remove(current)
-                current = candidate_list.pop(0)
-
-        return definite
-
+    return moves
 
 def check_path_pond(start: Tile, direction: int, step: int):
     curr = start

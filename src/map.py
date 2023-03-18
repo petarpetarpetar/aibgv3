@@ -92,9 +92,9 @@ class Map:
             for tile in row:
                 item_type = tile.tile_content.item_type
                 power_dict[item_type].append(tile)
-        for item in power_dict.keys():
-            if item not in boosters:
-                power_dict.pop(item)
+        # for item in power_dict.keys():
+        #     if item not in boosters:
+        #         power_dict.pop(item)
         return power_dict
 
 

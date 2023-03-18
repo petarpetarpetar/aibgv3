@@ -7,9 +7,10 @@ from apiCalls import *
 from direction import Direction
 import map
 import time
+from item_type import ItemType
 from petar import run_BFS
 from player import Player
-
+import heuristics
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -46,17 +47,28 @@ def main():
     if player2.team_name == "xepoju":
         enemy_player = player1
 
-    cilj_x = random.randint(0,26)
-    cilj_y = random.randint(0,9)
-    iter = 0
-    step = run_BFS(mapa.tiles[0, 0], mapa.tiles[cilj_x, cilj_y], mapa, (enemy_player.x, enemy_player.y))
+    
+    step = run_BFS(mapa.tiles[0, 0], mapa.tiles[1, 7], mapa, (enemy_player.x, enemy_player.y))
+    print("PLAYED")
+    print(step)
+    moves = reversed(step[:-1])
+    print("gameId: ", game_obj.get("gameId"))
+    
+    bee = Player(game_obj.get("player1"))
+
+    #pocetni bee.x, bee.y
+    #krajnji m.row, m.column
     while True:
-        print("move")
-        print(f"{step}")
-        step = run_BFS(mapa.tiles[step.row, step.column], mapa.tiles[cilj_x, cilj_y], mapa,
-                       (enemy_player.x, enemy_player.y))
-        if step is None:
-            break
+        for m in moves:
+            print(m)
+            direction = heuristics.get_direction(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
+            amount = heuristics.count_tiles_between_two_tiles(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
+            print(direction)
+            print(amount)
+            time.sleep(5)
+            game_obj = move(direction, amount)
+            bee = Player(game_obj.get("player1"))
+            time.sleep(5)
 
 
 if __name__ == "__main__":
