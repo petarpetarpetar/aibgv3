@@ -1,16 +1,17 @@
-import numpy as np
-import neighbours as nb
+import item_type as it
+import neighbors as nb
 
 
 class TileContent:
     def __init__(self, item_type):
-        self.item_type = item_type
+        self.item_type = it.ItemType[item_type]
 
 
 class Tile:
-    def __init__(self, row, column, tile_content):
-        self.row = row
-        self.column = column
+    def __init__(self, tile_dict):
+        self.row = tile_dict.get("row")
+        self.column = tile_dict.get("column")
+        tile_content = TileContent(tile_dict.get("tileContent").get("itemType").upper())
         self.tile_content = tile_content
 
     def __eq__(self, other):
@@ -18,6 +19,9 @@ class Tile:
             return True
         else:
             return False
+    
+    def __str__(self) -> str:
+        return f"{self.row} {self.column}"
 
 
 class Map:
@@ -25,30 +29,70 @@ class Map:
         self.tiles = tiles
         self.width, self.height = self.tiles.shape
 
-    def get_neigbor_list(self, current_tile):
+    def get_neighbor_list(self, current_tile):
         x, y = current_tile.x, current_tile.y
         nb.set_x_y(x, y)
-        neighbours_position = [nb.neighbour_up_position(), nb.neighbour_down_position(),
-                               nb.neighbour_upper_left_position(), nb.neighbour_upper_right_position(),
-                               nb.neighbour_down_left_position(), nb.neighbour_down_right_position()]
-        neighbours = []
-        for position in neighbours_position:
+        neighbors_position = [nb.neighbor_up_position(), nb.neighbor_down_position(),
+                               nb.neighbor_upper_left_position(), nb.neighbor_upper_right_position(),
+                               nb.neighbor_down_left_position(), nb.neighbor_down_right_position()]
+        neighbors = []
+        for position in neighbors_position:
             if position is None:
-                neighbours.append(None)
+                neighbors.append(None)
             else:
-                neighbours.append(self.tiles[x, y])
-        return neighbours
+                neighbors.append(self.tiles[x, y])
+        return neighbors
 
-    def get_neighbor(cursor: Tile, direction: int, _map: None) -> Tile:
+    def get_neighbor(self, cursor: Tile, direction: int) -> [Tile, None]:
+        x, y = cursor.row, cursor.column
+        nb.set_x_y(x, y)
         if direction == 0:
-            pass
+            position = nb.neighbor_up_position()
+            if position is None:
+                return None
+            return self.tiles[nb.neighbor_up_position()]
+        
         elif direction == 1:
-            pass
+            position = nb.neighbor_upper_right_position()
+            if position is None:
+                return None
+            return self.tiles[nb.neighbor_upper_right_position()]
+        
         elif direction == 2:
-            pass
+            position = nb.neighbor_down_right_position()
+            
+            if position is None:
+                return None
+            return self.tiles[nb.neighbor_down_right_position()]
+        
         elif direction == 3:
-            pass
+            position = nb.neighbor_down_position()
+            if position is None:
+                return None
+            return self.tiles[nb.neighbor_down_position()]
+        
         elif direction == 4:
-            pass
+            position = nb.neighbor_down_left_position()
+            if position is None:
+                return None
+            return self.tiles[nb.neighbor_down_left_position()]
+        
         elif direction == 5:
-            pass
+            position = nb.neighbor_upper_left_position()
+            if position is None:
+                return None
+            return self.tiles[nb.neighbor_upper_left_position()]
+
+    def get_power_up_positions(self):
+        power_dict = {}
+        boosters = it.ItemType.get_boosters()
+        for item in it.ItemType:
+            power_dict[item] = []
+        for row in self.tiles:
+            for tile in row:
+                item_type = tile.tile_content.item_type
+                power_dict[item_type].append(tile)
+        for item in power_dict.keys():
+            if item not in boosters:
+                power_dict.pop(item)
+        return power_dict

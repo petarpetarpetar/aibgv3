@@ -1,0 +1,17 @@
+class Player:
+    def __init__(self, player_dict):
+        self.x = player_dict['x']
+        self.y = player_dict['y']
+        self.score = player_dict['score']
+        self.energy = player_dict['energy']
+        self.nectar = player_dict['nectar']
+        self.honey = player_dict['honey']
+        self.turns_frozen = player_dict['turnsFrozen']
+        self.num_of_skip_a_turn_used = player_dict['numOfSkipATurnUsed']
+        self.executed_action = player_dict['executedAction']
+        self.distance_moved = player_dict['distanceMoved']
+        self.team_name = player_dict['teamName']
+        self.skin = player_dict['skin']
+        self.hive_x = player_dict['hiveX']
+        self.hive_y = player_dict['hiveY']
+        self.frozen = player_dict['frozen']
