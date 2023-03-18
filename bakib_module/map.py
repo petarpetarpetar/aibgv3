@@ -1,22 +1,41 @@
+import numpy as np
+import neighbours as nb
+
+
 class TileContent:
     def __init__(self, item_type):
-        self._item_type = item_type
+        self.item_type = item_type
 
 
 class Tile:
     def __init__(self, row, column, tile_content):
-        self._row = row
-        self._column = column
-        self._tile_content = tile_content
+        self.row = row
+        self.column = column
+        self.tile_content = tile_content
+
+    def __eq__(self, other):
+        if self.row == other.row and self.column == other.column and self.tile_content == other.tile_content:
+            return True
+        else:
+            return False
 
 
 class Map:
     def __init__(self, tiles):
-        self._width = 9
-        self._height = 9
-        self._tiles = tiles
+        self.tiles = tiles
+        self.width, self.height = self.tiles.shape
 
-    def get_element_neighbors(self):
-        # TODO
-        return
+    def get_element_neighbors(self, current_tile):
+        x, y = current_tile.x, current_tile.y
+        nb.set_x_y(x, y)
+        neighbours_position = [nb.neighbour_up_position(), nb.neighbour_down_position(),
+                               nb.neighbour_upper_left_position(), nb.neighbour_upper_right_position(),
+                               nb.neighbour_down_left_position(), nb.neighbour_down_right_position()]
+        neighbours = []
+        for position in neighbours_position:
+            if position is None:
+                neighbours.append(None)
+            else:
+                neighbours.append(self.tiles[x, y])
+        return neighbours
 
