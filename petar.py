@@ -18,22 +18,24 @@ from tile import Tile
 @param _map - celoukupna mapa i informacije o poljima, [[Tile1, Tile2...][...]]
 """
 
-def getNeighbor(cursor: Tile, smer: int, _map):
+def checkPathPond(cursor: Tile, direction: int, step: int):
+    pass
+
+def getNeighbor(cursor: Tile, direction: int, _map):
 
     
     pass
 
 def matrix(curr: Tile, _map):
-    #matrix[i, j] sadrzi koliko je dobar potez da se ide u 'i' smeru 'j' koraka
+    #matrix[i, j] sadrzi koliko je dobar potez da se ide u 'i' directionu 'j' stepa
     matrix = np.zeros((6,17)) #6 pravaca, 16 je najduza dijagonala + 1 za dinamicku matricu
     
     #dinamicki izracunati matricu
-    for smer in range(6):
-        cursor = curr # za sledeci smer se vrati na pocetni tile
-        for korak in range(1, 17):
-            neighbor = getNeighbor(cursor, smer, _map)
-            matrix[smer, korak] = matrix[smer, korak-1] #+ neighbor.score
+    for direction in range(6):
+        cursor = curr # za sledeci direction se vrati na pocetni tile
+        for step in range(1, 17):
+            neighbor = getNeighbor(cursor, direction, _map)
+            matrix[direction, step] = matrix[direction, step-1] #+ neighbor.score
             cursor = neighbor #samo nastavi od komsije
             
     return
-matrix()
