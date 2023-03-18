@@ -25,7 +25,7 @@ class Map:
         self.tiles = tiles
         self.width, self.height = self.tiles.shape
 
-    def getNeighborsList(self, current_tile):
+    def get_neigbor_list(self, current_tile):
         x, y = current_tile.x, current_tile.y
         nb.set_x_y(x, y)
         neighbours_position = [nb.neighbour_up_position(), nb.neighbour_down_position(),
@@ -39,7 +39,7 @@ class Map:
                 neighbours.append(self.tiles[x, y])
         return neighbours
 
-    def getNeighbor(cursor: Tile, direction: int, _map: None) -> Tile:
+    def get_neighbor(cursor: Tile, direction: int, _map: None) -> Tile:
         if direction == 0:
             pass
         elif direction == 1:
@@ -52,4 +52,3 @@ class Map:
             pass
         elif direction == 5:
             pass
-            
