@@ -21,7 +21,7 @@ def bot_vs_bot():
     return res.json()
 
 
-def init_game(train: bool, bot_vs_bot: bool, _game_id: int, _player_id: int):
+def init_game(train: bool, _bot_vs_bot: bool, _game_id: int, _player_id: int):
     global url
     global game_id
     global player_id
@@ -34,11 +34,11 @@ def init_game(train: bool, bot_vs_bot: bool, _game_id: int, _player_id: int):
         game_obj = start_training()
         game_id = game_obj.get("gameId")
         return game_obj
-    elif bot_vs_bot:
+    elif _bot_vs_bot:
         game_obj = bot_vs_bot()
         game_id = game_obj.get("gameID")
         return game_obj
-    elif not train and not bot_vs_bot:
+    elif not train and not _bot_vs_bot:
         return join_game()
 
 
