@@ -21,6 +21,7 @@ from map import Tile, Map
 
 def run_BFS(start: Tile, end: Tile, _map):
     nexup = [start]
+    found = False
     for iteration in range(1, 10): # max 10 iters 
         
         if nexup == []: # no more tiles to lookup
@@ -47,9 +48,13 @@ def run_BFS(start: Tile, end: Tile, _map):
                 # otherwise 
                 if bfs[cursor.row, cursor.column] == 0 or iteration < bfs[cursor.row, cursor.column]: 
                     nexup.append(cursor)
+                    found = True
                     bfs[cursor.row, cursor.column] = iteration
+    print(bfs)
+    if found:
+        print(f"found way in {iteration} steps")
+    
 
-    pass
 
 def check_path_pond(start: Tile, direction: int, step: int):
     curr = start
