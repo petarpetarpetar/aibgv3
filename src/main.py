@@ -32,19 +32,23 @@ def get_map(game_obj):
     return game_map.Map(tiles)
 
 
-def main():
-    args = parse_arguments()
-    game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
-    mapa = get_map(game_obj)
+def get_players(game_obj):
     player1 = Player(game_obj.get("player1"))
     player2 = Player(game_obj.get("player2"))
-    our_player_str = "player1"
     our_player = player1
     enemy_player = player2
     if player2.team_name == "xepoju":
         enemy_player = player1
         our_player = player2
-        our_player_str = "player2"
+    return our_player, enemy_player
+
+
+def main():
+    args = parse_arguments()
+    game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
+    mapa = get_map(game_obj)
+    our_player, enemy_player = get_players(game_obj)
+    our_player_str = "player1" if game_obj.get("player1").get("teamName") == "xepoji" else "player2"
     # TODO nas_potez(our_player, enemy_player, mapa)
     print("gameId: ", game_obj.get("gameId"))
 
