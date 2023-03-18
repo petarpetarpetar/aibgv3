@@ -5,7 +5,7 @@ import neighbours as nb
 
 class TileContent:
     def __init__(self, item_type):
-        self.item_type = item_type
+        self.item_type = it.ItemType[item_type]
 
 
 class Tile:

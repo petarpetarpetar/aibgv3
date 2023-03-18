@@ -8,6 +8,7 @@ import map
 import time
 from petar import run_BFS
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("train", type=bool)
@@ -38,7 +39,6 @@ def main():
     print(mapa.get_neighbor(mapa.tiles[0,0], 3))
     run_BFS(mapa.tiles[0,0],mapa.tiles[2, 0], mapa)
 
-        
 
 if __name__ == "__main__":
     main()
