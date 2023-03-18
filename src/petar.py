@@ -1,5 +1,5 @@
 import numpy as np
-from map import Tile
+from map import Tile, Map
 
 '''
 0 - gore
@@ -19,20 +19,43 @@ from map import Tile
 """
 
 
-def runBFS(start: Tile, end: Tile, _map):
-    for direction in range(6):
-        cursor = start
+def run_BFS(start: Tile, end: Tile, _map):
+    nexup = [start]
+    for iteration in range(1, 10): # max 10 iters 
         
-        while True:
-            pass    
+        if nexup == []: # no more tiles to lookup
+            break
+        start = nexup.pop(0)
+        
+        for direction in range(6):
+            bfs = np.zeros((27,9))
+            cursor: Tile = start
+            
+            while True:
+                cursor = Map.get_neighbor(cursor, direction)
+                # stop cases
+                if cursor is None: # if out of bounds
+                    break
+
+                if cursor.tile_content.item_type == "pond":
+                    bfs[cursor.row, cursor.column] = -1
+                    break
+
+                if cursor == end: # dosli smo do kraja puta
+                    break
+
+                # otherwise 
+                if bfs[cursor.row, cursor.column] == 0 or iteration < bfs[cursor.row, cursor.column]: 
+                    nexup.append(cursor)
+                    bfs[cursor.row, cursor.column] = iteration
 
     pass
 
-def checkPathPond(start: Tile, direction: int, step: int):
+def check_path_pond(start: Tile, direction: int, step: int):
     curr = start
     global _map #hotfix
     for i in range(step): #iteracija koliko i koraka
-        curr = getNeighbor(curr, direction, _map)
+        curr = Map.get_neighbor(curr, direction)
         if curr.type == "pond": #TODO: vidi kako je balsa implementirao tile
             return True
         
@@ -47,7 +70,7 @@ def matrix(curr: Tile, _map):
     for direction in range(6):
         cursor = curr # za sledeci direction se vrati na pocetni tile
         for step in range(1, 17):
-            neighbor = getNeighbor(cursor, direction)
+            neighbor = Map.get_neighbor(cursor, direction)
             matrix[direction, step] = matrix[direction, step-1] #+ neighbor.score
             cursor = neighbor #samo nastavi od komsije
             
