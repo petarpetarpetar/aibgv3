@@ -1,3 +1,4 @@
+import item_type as it
 import numpy as np
 import neighbours as nb
 
@@ -11,6 +12,12 @@ class Tile:
     def __init__(self, row, column, tile_content):
         self.row = row
         self.column = column
+        self.tile_content = tile_content
+
+    def __init__(self, tile_dict):
+        self.row = tile_dict.get("row")
+        self.column = tile_dict.get("column")
+        tile_content = TileContent(tile_dict.get("tileContent").get("itemType").upper())
         self.tile_content = tile_content
 
     def __eq__(self, other):
