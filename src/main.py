@@ -4,8 +4,10 @@ import numpy as np
 
 from apiCalls import *
 from direction import Direction
-import src.map as game_map
+import map as game_map
 from player import Player
+from bestMoves import get_best_move
+from move import Move
 
 
 def parse_arguments():
@@ -37,6 +39,7 @@ def get_players(game_obj):
     enemy_player = player2
     if player2.team_name == "xepoju":
         enemy_player = player1
+        our_player = player2
     return our_player, enemy_player
 
 
@@ -45,8 +48,25 @@ def main():
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
     mapa = get_map(game_obj)
     our_player, enemy_player = get_players(game_obj)
+    our_player_str = "player1" if game_obj.get("player1").get("teamName") == "xepoji" else "player2"
     # TODO nas_potez(our_player, enemy_player, mapa)
     print("gameId: ", game_obj.get("gameId"))
+
+    while True:
+        best_move = get_best_move(game_obj.copy(), 3)
+        print(best_move)
+        action, tile = best_move
+
+        if action == Move.MOVE:
+            game_obj = move(tile.get("direction"), tile.get("distance"))
+        elif action == Move.NECTAR_TO_ENERGY:
+            amount = (100 - game_obj.get(our_player_str).get("energy")) / 2
+            game_obj = feed_bee_with_nectar(amount)
+        elif action == Move.NECTAR_TO_HONEY:
+            amount = game_obj.get(our_player_str).get("nectar") / 20
+            game_obj = convert_nectar_to_honey(amount)
+        elif action == Move.SKIP_TURN:
+            game_obj = skip_a_turn()
 
 
 if __name__ == "__main__":
