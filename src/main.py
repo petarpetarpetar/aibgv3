@@ -1,5 +1,6 @@
 import argparse
 from apiCalls import *
+from direction import Direction
 
 
 def parse_arguments():

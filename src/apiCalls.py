@@ -1,4 +1,5 @@
 import requests as req
+from direction import Direction
 
 
 def join_game():
@@ -20,7 +21,7 @@ def bot_vs_bot():
     return res.json()
 
 
-def init_game(train, bot_vs_bot, _game_id, _player_id):
+def init_game(train: bool, bot_vs_bot: bool, _game_id: int, _player_id: int):
     global url
     global game_id
     global player_id
@@ -41,5 +42,8 @@ def init_game(train, bot_vs_bot, _game_id, _player_id):
         return join_game()
 
 
-def move(direction, distance):
-    pass
+def move(direction: Direction, distance: int):
+    body = {"playerId": player_id, "gameId": game_id, "direction": direction.value, "distance": distance}
+    res = req.post(url + "move", json=body)
+
+    return res.json()
