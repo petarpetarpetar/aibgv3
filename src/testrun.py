@@ -10,6 +10,7 @@ import time
 from petar import run_BFS
 from player import Player
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("train", type=bool)
@@ -37,7 +38,7 @@ def main():
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
     mapa = get_map(game_obj)
     print("gameId: ", game_obj.get("gameId"))
-    
+
     player1 = Player(game_obj.get("player1"))
     player2 = Player(game_obj.get("player2"))
     our_player = player1
@@ -48,13 +49,15 @@ def main():
     cilj_x = random.randint(0,26)
     cilj_y = random.randint(0,9)
     iter = 0
-    step = run_BFS(mapa.tiles[0,0],mapa.tiles[cilj_x, cilj_y], mapa, (enemy_player.x, enemy_player.y))
+    step = run_BFS(mapa.tiles[0, 0], mapa.tiles[cilj_x, cilj_y], mapa, (enemy_player.x, enemy_player.y))
     while True:
         print("move")
         print(f"{step}")
-        step = run_BFS(mapa.tiles[step.row,step.column],mapa.tiles[cilj_x, cilj_y], mapa, (enemy_player.x, enemy_player.y))
+        step = run_BFS(mapa.tiles[step.row, step.column], mapa.tiles[cilj_x, cilj_y], mapa,
+                       (enemy_player.x, enemy_player.y))
         if step is None:
             break
+
 
 if __name__ == "__main__":
     main()
