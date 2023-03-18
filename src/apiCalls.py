@@ -43,7 +43,38 @@ def init_game(train: bool, bot_vs_bot: bool, _game_id: int, _player_id: int):
 
 
 def move(direction: Direction, distance: int):
+    """
+    direction - Enum Direction
+    distance - How far you want to go in the desired direction
+    """
     body = {"playerId": player_id, "gameId": game_id, "direction": direction.value, "distance": distance}
     res = req.post(url + "move", json=body)
+
+    return res.json()
+
+
+def convert_nectar_to_honey(amount: int):
+    """
+    amount - Amount of honey to make (20 nectar for 1 honey)
+    """
+    body = {"playerId": player_id, "gameId": game_id, "amountOfHoneyToMake": amount}
+    res = req.post(url + "convertNectarToHoney", json=body)
+
+    return res.json()
+
+
+def feed_bee_with_nectar(amount: int):
+    """
+    amount - Amount of nectar to feed to the bee (1 nectar for 2 energy)
+    """
+    body = {"playerId": player_id, "gameId": game_id, "amountOfNectarToFeedWith": amount}
+    res = req.post(url + "feedBeeWithNectar", json=body)
+
+    return res.json()
+
+
+def skip_a_turn():
+    body = {"playerId": player_id, "gameId": game_id}
+    res = req.post(url + "skipATurn", json=body)
 
     return res.json()
