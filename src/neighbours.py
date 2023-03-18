@@ -1,4 +1,4 @@
-WIDTH = 9
+WIDTH = 8
 HEIGHT = 26
 x = 0
 y = 0

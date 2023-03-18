@@ -25,6 +25,9 @@ class Tile:
             return True
         else:
             return False
+    
+    def __str__(self) -> str:
+        return f"{self.row} {self.column}"
 
 
 class Map:
@@ -46,18 +49,42 @@ class Map:
                 neighbours.append(self.tiles[x, y])
         return neighbours
 
-    def get_neighbor(self, cursor: Tile, direction: int, _map: None) -> Tile:
+    def get_neighbor(self, cursor: Tile, direction: int) -> Tile:
         x, y = cursor.row, cursor.column
         nb.set_x_y(x, y)
         if direction == 0:
+            coords = nb.neighbour_up_position()
+            if coords is None:
+                return None
             return self.tiles[nb.neighbour_up_position()]
+        
         elif direction == 1:
+            coords = nb.neighbour_upper_right_position()
+            if coords is None:
+                return None
             return self.tiles[nb.neighbour_upper_right_position()]
+        
         elif direction == 2:
+            coords = nb.neighbour_down_right_position()
+            
+            if coords is None:
+                return None
             return self.tiles[nb.neighbour_down_right_position()]
+        
         elif direction == 3:
+            coords = nb.neighbour_down_position()
+            if coords is None:
+                return None
             return self.tiles[nb.neighbour_down_position()]
+        
         elif direction == 4:
+            coords = nb.neighbour_down_left_position()
+            if coords is None:
+                return None
             return self.tiles[nb.neighbour_down_left_position()]
+        
         elif direction == 5:
+            coords = nb.neighbour_upper_left_position()
+            if coords is None:
+                return None
             return self.tiles[nb.neighbour_upper_left_position()]

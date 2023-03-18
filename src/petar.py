@@ -1,5 +1,7 @@
+import time
 import numpy as np
 from map import Tile, Map
+from item_type import ItemType
 
 '''
 0 - gore
@@ -20,37 +22,44 @@ from map import Tile, Map
 
 
 def run_BFS(start: Tile, end: Tile, _map):
-    nexup = [start]
+    nextup = [start]
     found = False
+    bfs = np.zeros((27,9), dtype=int)
+    bfs[start.row, start.column] = -1 # pocetak je -1
+
     for iteration in range(1, 10): # max 10 iters 
         
-        if nexup == []: # no more tiles to lookup
+        if nextup == []: # no more tiles to lookup
+            print("breaking cuz of nextup")
             break
-        start = nexup.pop(0)
+        start = nextup.pop(0)
         
         for direction in range(6):
-            bfs = np.zeros((27,9))
             cursor: Tile = start
-            
+            print(f"gledam {direction=}")
             while True:
-                cursor = Map.get_neighbor(cursor, direction)
-                # stop cases
+                cursor = _map.get_neighbor(cursor, direction)
+
                 if cursor is None: # if out of bounds
                     break
 
-                if cursor.tile_content.item_type == "pond":
-                    bfs[cursor.row, cursor.column] = -1
+                print(f"poredim {cursor.row}, {cursor.column}")
+                if cursor.tile_content.item_type == ItemType.POND:
+                    print("POND")
+                    bfs[cursor.row, cursor.column] = -4
                     break
 
-                if cursor == end: # dosli smo do kraja puta
+                if cursor.row == end.row and cursor.column == end.column: # dosli smo do kraja puta
                     break
 
                 # otherwise 
                 if bfs[cursor.row, cursor.column] == 0 or iteration < bfs[cursor.row, cursor.column]: 
-                    nexup.append(cursor)
+                    nextup.append(cursor)
                     found = True
                     bfs[cursor.row, cursor.column] = iteration
-    print(bfs)
+            print(bfs)
+
+            time.sleep(0.08)
     if found:
         print(f"found way in {iteration} steps")
     
