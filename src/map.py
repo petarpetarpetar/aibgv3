@@ -32,9 +32,14 @@ class Map:
     def get_neighbor_list(self, current_tile):
         x, y = current_tile.x, current_tile.y
         nb.set_x_y(x, y)
-        neighbors_position = [nb.neighbor_up_position(), nb.neighbor_down_position(),
-                              nb.neighbor_upper_left_position(), nb.neighbor_upper_right_position(),
-                              nb.neighbor_down_left_position(), nb.neighbor_down_right_position()]
+        neighbors_position = [
+            nb.neighbor_up_position(),
+            nb.neighbor_down_position(),
+            nb.neighbor_upper_left_position(),
+            nb.neighbor_upper_right_position(),
+            nb.neighbor_down_left_position(),
+            nb.neighbor_down_right_position(),
+        ]
         neighbors = []
         for position in neighbors_position:
             if position is None:
@@ -43,7 +48,7 @@ class Map:
                 neighbors.append(self.tiles[x, y])
         return neighbors
 
-    def get_neighbor(self, cursor: Tile, direction: int) -> [Tile, None]:
+    def get_neighbor(self, cursor: Tile, direction: int):
         x, y = cursor.row, cursor.column
         nb.set_x_y(x, y)
         if direction == 0:
@@ -94,7 +99,3 @@ class Map:
                 if item_type in boosters:
                     power_dict[item_type].append(tile)
         return power_dict
-
-
-
-
