@@ -86,15 +86,13 @@ class Map:
     def get_power_up_positions(self):
         power_dict = {}
         boosters = it.ItemType.get_boosters()
-        for item in it.ItemType:
+        for item in boosters:
             power_dict[item] = []
         for row in self.tiles:
             for tile in row:
                 item_type = tile.tile_content.item_type
-                power_dict[item_type].append(tile)
-        for item in power_dict.keys():
-            if item not in boosters:
-                power_dict.pop(item)
+                if item_type in boosters:
+                    power_dict[item_type].append(tile)
         return power_dict
 
 

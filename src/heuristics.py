@@ -45,6 +45,6 @@ def count_tiles_between_two_tiles(start: Tile, end: Tile):
     # moraju biti direktno povezane
     directions = get_direction(start, end)
     if directions in [Direction.up, Direction.down]:
-        return abs(start.row - start.column) % 2
+        return abs(start.row - end.row) // 2
     else:
         return abs(start.row - end.row)
