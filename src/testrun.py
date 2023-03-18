@@ -1,4 +1,5 @@
 import argparse
+import random
 
 import numpy as np
 
@@ -44,8 +45,8 @@ def main():
     if player2.team_name == "xepoju":
         enemy_player = player1
 
-    cilj_x = 25
-    cilj_y = 0
+    cilj_x = random.randint(0,26)
+    cilj_y = random.randint(0,9)
     iter = 0
     step = run_BFS(mapa.tiles[0,0],mapa.tiles[cilj_x, cilj_y], mapa, (enemy_player.x, enemy_player.y))
     while True:
