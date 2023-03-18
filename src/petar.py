@@ -1,5 +1,5 @@
 import numpy as np
-from tile import Tile
+from map import Tile
 
 '''
 0 - gore
@@ -38,9 +38,6 @@ def checkPathPond(start: Tile, direction: int, step: int):
         
     return False
 
-def getNeighbor(cursor: Tile, direction: int, _map: None):
-    
-    pass
 
 def matrix(curr: Tile, _map):
     #matrix[i, j] sadrzi koliko je dobar potez da se ide u 'i' directionu 'j' stepa
@@ -50,7 +47,7 @@ def matrix(curr: Tile, _map):
     for direction in range(6):
         cursor = curr # za sledeci direction se vrati na pocetni tile
         for step in range(1, 17):
-            neighbor = getNeighbor(cursor, direction, _map)
+            neighbor = getNeighbor(cursor, direction)
             matrix[direction, step] = matrix[direction, step-1] #+ neighbor.score
             cursor = neighbor #samo nastavi od komsije
             
