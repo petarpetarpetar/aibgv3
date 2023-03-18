@@ -18,11 +18,17 @@ from tile import Tile
 @param _map - celoukupna mapa i informacije o poljima, [[Tile1, Tile2...][...]]
 """
 
-def checkPathPond(cursor: Tile, direction: int, step: int):
-    pass
+def checkPathPond(start: Tile, direction: int, step: int):
+    curr = start
+    global _map #hotfix
+    for i in range(step): #iteracija koliko i koraka
+        curr = getNeighbor(curr, direction, _map)
+        if curr.type == "pond" #TODO: vidi kako je balsa implementirao tile
+            return True
+        
+    return False
 
-def getNeighbor(cursor: Tile, direction: int, _map):
-
+def getNeighbor(cursor: Tile, direction: int, _map: None):
     
     pass
 
