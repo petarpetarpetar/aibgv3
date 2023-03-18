@@ -10,19 +10,19 @@ def set_x_y(_x, _y):
     y = _y
 
 
-def neighbour_up_position():
+def neighbor_up_position():
     if x - 2 < 0:
         return None
     return x - 2, y
 
 
-def neighbour_down_position():
+def neighbor_down_position():
     if x + 2 > HEIGHT:
         return None
     return x + 2, y
 
 
-def neighbour_upper_left_position():
+def neighbor_upper_left_position():
     y1 = y
     if x % 2 == 0:
         y1 -= 1
@@ -32,7 +32,7 @@ def neighbour_upper_left_position():
         return x - 1, y1
 
 
-def neighbour_upper_right_position():
+def neighbor_upper_right_position():
     y1 = y
     if x % 2 == 1:
         y1 += 1
@@ -41,7 +41,7 @@ def neighbour_upper_right_position():
     return x - 1, y1
 
 
-def neighbour_down_left_position():
+def neighbor_down_left_position():
     y1 = y
     if x % 2 == 0:
         y1 -= 1
@@ -50,7 +50,7 @@ def neighbour_down_left_position():
     return x + 1, y1
 
 
-def neighbour_down_right_position():
+def neighbor_down_right_position():
     y1 = y
     if x % 2 == 1:
         y1 += 1

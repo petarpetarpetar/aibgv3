@@ -25,11 +25,11 @@ def run_BFS(start: Tile, end: Tile, _map):
     nextup = [start]
     found = False
     bfs = np.zeros((27,9), dtype=int)
-    bfs[start.row, start.column] = -1 # pocetak je -1
+    bfs[start.row, start.column] = -1  # pocetak je -1
 
     for iteration in range(1, 10): # max 10 iters 
         
-        if nextup == []: # no more tiles to lookup
+        if nextup == []:  # no more tiles to lookup
             print("breaking cuz of nextup")
             break
         start = nextup.pop(0)
@@ -62,7 +62,6 @@ def run_BFS(start: Tile, end: Tile, _map):
             time.sleep(0.08)
     if found:
         print(f"found way in {iteration} steps")
-    
 
 
 def check_path_pond(start: Tile, direction: int, step: int):
@@ -70,7 +69,7 @@ def check_path_pond(start: Tile, direction: int, step: int):
     global _map #hotfix
     for i in range(step): #iteracija koliko i koraka
         curr = Map.get_neighbor(curr, direction)
-        if curr.type == "pond": #TODO: vidi kako je balsa implementirao tile
+        if curr.type == "pond":  # TODO: vidi kako je balsa implementirao tile
             return True
         
     return False

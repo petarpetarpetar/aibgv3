@@ -19,7 +19,7 @@ class Tile:
             return True
         else:
             return False
-    
+
     def __str__(self) -> str:
         return f"{self.row} {self.column}"
 
@@ -33,8 +33,8 @@ class Map:
         x, y = current_tile.x, current_tile.y
         nb.set_x_y(x, y)
         neighbors_position = [nb.neighbor_up_position(), nb.neighbor_down_position(),
-                               nb.neighbor_upper_left_position(), nb.neighbor_upper_right_position(),
-                               nb.neighbor_down_left_position(), nb.neighbor_down_right_position()]
+                              nb.neighbor_upper_left_position(), nb.neighbor_upper_right_position(),
+                              nb.neighbor_down_left_position(), nb.neighbor_down_right_position()]
         neighbors = []
         for position in neighbors_position:
             if position is None:
@@ -51,32 +51,32 @@ class Map:
             if position is None:
                 return None
             return self.tiles[nb.neighbor_up_position()]
-        
+
         elif direction == 1:
             position = nb.neighbor_upper_right_position()
             if position is None:
                 return None
             return self.tiles[nb.neighbor_upper_right_position()]
-        
+
         elif direction == 2:
             position = nb.neighbor_down_right_position()
-            
+
             if position is None:
                 return None
             return self.tiles[nb.neighbor_down_right_position()]
-        
+
         elif direction == 3:
             position = nb.neighbor_down_position()
             if position is None:
                 return None
             return self.tiles[nb.neighbor_down_position()]
-        
+
         elif direction == 4:
             position = nb.neighbor_down_left_position()
             if position is None:
                 return None
             return self.tiles[nb.neighbor_down_left_position()]
-        
+
         elif direction == 5:
             position = nb.neighbor_upper_left_position()
             if position is None:
@@ -96,3 +96,7 @@ class Map:
             if item not in boosters:
                 power_dict.pop(item)
         return power_dict
+
+
+
+

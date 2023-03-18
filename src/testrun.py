@@ -36,8 +36,8 @@ def main():
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
     mapa = get_map(game_obj)
     print("gameId: ", game_obj.get("gameId"))
-    print(mapa.get_neighbor(mapa.tiles[0,0], 3))
-    run_BFS(mapa.tiles[0,0],mapa.tiles[2, 0], mapa)
+    print(mapa.get_neighbor(mapa.tiles[0, 0], 3))
+    run_BFS(mapa.tiles[0, 0], mapa.tiles[2, 0], mapa)
 
 
 if __name__ == "__main__":
