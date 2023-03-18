@@ -6,7 +6,7 @@ from apiCalls import *
 from direction import Direction
 import map as game_map
 from player import Player
-from bestMoves import get_best_move
+from bestMoves import *
 from move import Move
 
 
@@ -52,9 +52,11 @@ def main():
     # TODO nas_potez(our_player, enemy_player, mapa)
     print("gameId: ", game_obj.get("gameId"))
 
+    print(evaluate_state(game_obj, our_player_str))
+
     while True:
-        best_move = get_best_move(game_obj.copy(), 3)
-        print(best_move)
+        best_move, score = get_best_move(game_obj.copy(), 3)
+        print(best_move, score)
         action, tile = best_move
 
         if action == Move.MOVE:

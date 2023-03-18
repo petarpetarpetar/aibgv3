@@ -19,6 +19,13 @@ def update_score_from_nectar(player: dict, prev_score: int, inc: int):
         player.update({"score": prev_score + inc})
 
 
+def find_tile(tiles: list, row: int, column: int):
+    for tile_arr in tiles:
+        for tile in tile_arr:
+            if tile.get("row") == row and tile.get("column") == column:
+                return tile
+
+
 def simulate_move(move: Move, tile: dict, game_obj: dict, my_player: str, distance: int):
     player = None
     opp_player = None
@@ -33,7 +40,7 @@ def simulate_move(move: Move, tile: dict, game_obj: dict, my_player: str, distan
         player = game_obj.get("player2")
 
     if tile is not None:
-        item_type = tile.get("tileContent").get("itemType")
+        item_type = find_tile(map.get("tiles"), tile.get("row"), tile.get("column")).get("itemType")
     prev_nectar = player.get("nectar")
     prev_energy = player.get("energy")
     prev_honey = player.get("honey")
@@ -86,6 +93,8 @@ def simulate_move(move: Move, tile: dict, game_obj: dict, my_player: str, distan
         if player.get("nectar") > 100:
             player.update({"nectar": 100})
             player.update({"score": prev_score + (100 - prev_nectar)})
+
+        player.update({"x": tile.get("row"), "y": tile.get("column")})
     elif move == Move.NECTAR_TO_HONEY:
         if player.get("x") != player.get("hiveX") and player.get("y") != player.get("hiveY"):
             return game_obj
@@ -111,21 +120,12 @@ def simulate_move(move: Move, tile: dict, game_obj: dict, my_player: str, distan
     return game_obj
 
 
-def check_in_arr(tile, arr):
-    for elem in arr:
-        if tile.get("row") == elem.get("row") and tile.get("column") == elem.get("column"):
-            return (True, elem.get("distance"))
-
-    return (False, 0)
-
-
 def valid_from_tile(tile, direction: Direction):
     valid = []
     current_tile = tile
     distance = 0
 
     while True:
-
         if current_tile.get("row") % 2 == 0:
             if direction == direction.down:
                 distance += 1
@@ -223,7 +223,7 @@ def get_best_score(game_obj: dict, lookahead_depth: int):
         my_player = "player2"
 
     if lookahead_depth == 0:
-        return evaluate_state(game_obj, my_player)
+        return evaluate_state(game_obj.copy(), my_player)
 
     best_move = None
     best_score = -math.inf
@@ -231,33 +231,22 @@ def get_best_score(game_obj: dict, lookahead_depth: int):
     valid_from_tile_dict = {}
     lookahead_state = None
     move = None
-    distance = 0
-    # treba dodati da li moze u jednom pravcu tu da ode
+
     for m in Move:
         if m == Move.MOVE:
-            for tile_arr in tiles:
-                for tile in tile_arr:
-                    last_direction = None
-                    for d in Direction:
-                        valid_from_tile_dict[d.value] = valid_from_tile(
-                            {"row": my_position.get("x"), "column": my_position.get("y")}, d
-                        )
-                        check, distance = check_in_arr(tile, valid_from_tile_dict[d.value])
-                        last_direction = d
-                        if check:
-                            break
-                    else:
-                        continue
+            for d in Direction:
+                valid_from_tile_dict[d] = valid_from_tile({"row": my_position.get("x"), "column": my_position.get("y")}, d)
 
+                for tile in valid_from_tile_dict[d]:
                     if (tile.get("row") == my_position.get("x") and tile.get("column") == my_position.get("y")) or (
                         tile.get("row") == opponent_position.get("x") and tile.get("column") == opponent_position.get("y")
                     ):
                         continue
 
-                    lookahead_state = simulate_move(m, tile, game_obj.copy(), my_player, distance)
-                    tile.update({"distance": distance, "direction": last_direction})
+                    lookahead_state = simulate_move(m, tile, game_obj.copy(), my_player, tile.get("distance"))
+                    tile.update({"direction": d})
                     move = (m, tile)
-                    score = get_best_score(lookahead_state, lookahead_depth - 1)
+                    score = get_best_score(lookahead_state.copy(), lookahead_depth - 1)
 
                     if score > best_score:
                         best_score = score
@@ -266,7 +255,7 @@ def get_best_score(game_obj: dict, lookahead_depth: int):
         else:
             lookahead_state = simulate_move(m, None, game_obj.copy(), my_player, 0)
             move = (m, None)
-            score = get_best_score(lookahead_state, lookahead_depth - 1)
+            score = get_best_score(lookahead_state.copy(), lookahead_depth - 1)
 
             if score > best_score:
                 best_score = score
@@ -301,33 +290,20 @@ def get_best_move(game_obj: dict, lookahead_depth: int):
     valid_from_tile_dict = {}
     lookahead_state = None
     move = None
-    distance = 0
-    # treba dodati da li moze u jednom pravcu tu da ode
+
     for m in Move:
         if m == Move.MOVE:
-            for tile_arr in tiles:
-                for tile in tile_arr:
-                    last_direction = None
-                    for d in Direction:
-                        valid_from_tile_dict[d.value] = valid_from_tile(
-                            {"row": my_position.get("x"), "column": my_position.get("y")}, d
-                        )
-                        check, distance = check_in_arr(tile, valid_from_tile_dict[d.value])
-                        last_direction = d
-                        if check:
-                            break
-                    else:
+            for d in Direction:
+                valid_from_tile_dict[d] = valid_from_tile({"row": my_position.get("x"), "column": my_position.get("y")}, d)
+
+                for tile in valid_from_tile_dict[d]:
+                    if tile.get("row") == opponent_position.get("x") and tile.get("column") == opponent_position.get("y"):
                         continue
 
-                    if (tile.get("row") == my_position.get("x") and tile.get("column") == my_position.get("y")) or (
-                        tile.get("row") == opponent_position.get("x") and tile.get("column") == opponent_position.get("y")
-                    ):
-                        continue
-
-                    lookahead_state = simulate_move(m, tile, game_obj.copy(), my_player, distance)
-                    tile.update({"distance": distance, "direction": last_direction})
+                    lookahead_state = simulate_move(m, tile, game_obj.copy(), my_player, tile.get("distance"))
+                    tile.update({"direction": d})
                     move = (m, tile)
-                    score = get_best_score(lookahead_state, lookahead_depth - 1)
+                    score = get_best_score(lookahead_state.copy(), lookahead_depth - 1)
 
                     if score > best_score:
                         best_score = score
@@ -336,10 +312,10 @@ def get_best_move(game_obj: dict, lookahead_depth: int):
         else:
             lookahead_state = simulate_move(m, None, game_obj.copy(), my_player, 0)
             move = (m, None)
-            score = get_best_score(lookahead_state, lookahead_depth - 1)
+            score = get_best_score(lookahead_state.copy(), lookahead_depth - 1)
 
             if score > best_score:
                 best_score = score
                 best_move = move
 
-    return best_move
+    return (best_move, score)
