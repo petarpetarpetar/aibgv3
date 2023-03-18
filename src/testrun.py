@@ -47,28 +47,35 @@ def main():
     if player2.team_name == "xepoju":
         enemy_player = player1
 
-    
-    step = run_BFS(mapa.tiles[0, 0], mapa.tiles[1, 7], mapa, (enemy_player.x, enemy_player.y))
-    print("PLAYED")
-    print(step)
-    moves = reversed(step[:-1])
     print("gameId: ", game_obj.get("gameId"))
+    time.sleep(5)
     
+    togo = mapa.get_power_up_positions()[ItemType.SUPER_HONEY][::-1]
     bee = Player(game_obj.get("player1"))
 
-    #pocetni bee.x, bee.y
-    #krajnji m.row, m.column
     while True:
-        for m in moves:
-            print(m)
-            direction = heuristics.get_direction(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
-            amount = heuristics.count_tiles_between_two_tiles(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
-            print(direction)
-            print(amount)
-            time.sleep(5)
-            game_obj = move(direction, amount)
+        for go in togo:
+            print("bee", bee.x, bee.y)
+            print("go", go)
+            step = run_BFS(mapa.tiles[bee.x, bee.y], go, mapa, (enemy_player.x, enemy_player.y))
+            
+            print(step)
+            moves = step[::-1]
+            moves = moves[1:]
             bee = Player(game_obj.get("player1"))
-            time.sleep(5)
+            print(moves)
+            for s in moves:
+                print(s, end=" |")
+            time.sleep(10)
+            for m in moves:
+                print(m)
+                direction = heuristics.get_direction(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
+                amount = heuristics.count_tiles_between_two_tiles(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
+                print("direction",direction)
+                print("amount",amount)
+                game_obj = move(direction, amount)
+                bee = Player(game_obj.get("player1"))
+                time.sleep(3)
 
 
 if __name__ == "__main__":

@@ -24,6 +24,7 @@ from item_type import ItemType
 def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
     next_iteration_tiles = [start]
     new_tiles = []
+    moves=[end]
     bfs = np.full((27, 9), 0, dtype=int)
     bfs[start.row, start.column] = -1
     visited = []
@@ -61,7 +62,7 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                         # print(f"found end in {iteration}")
                         if iteration == 1 or iteration == 0:
                             print(f"steps to end= {bfs[end.row, end.column]}")
-                            return current
+                            return [current]
                         found_end = True
                         break
 
@@ -94,15 +95,14 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
             print("pa mozes odma")
             return definite
         
-        moves=[]
 
         while not flag_found_moves:
             connected = False
             for direction in range(0, 6):
                 candidate: Tile = _map.get_neighbor(current, direction)
-                print()
-                print("current ", current, f"({temp(current.row, current.column)})")
-                print("candidate", candidate, end=" ")
+                # print()
+                # print("current ", current, f"({temp(current.row, current.column)})")
+                # print("candidate", candidate, end=" ")
 
                 if moves != []:
                     if score(moves[-1]) == -1:
@@ -120,7 +120,7 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                     pass
                     # print("shit")
                 
-                print("candidate_list: ", end=" ")
+                # print("candidate_list: ", end=" ")
                 for cand in candidate_list:
                     print(cand, f"({temp(cand.row, cand.column)})", end=" ||")
                     if temp(cand.row, cand.column) < temp(current.row, current.column):
@@ -132,8 +132,8 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                         connected = True
                         break
                 
-                print("moves: ", end=" ")
-                [print(x, f"({temp(x.row, x.column)})", end=" |") for x in moves]
+                # print("moves: ", end=" ")
+                # [print(x, f"({temp(x.row, x.column)})", end=" |") for x in moves]
 
             if not connected:
                 
@@ -141,20 +141,22 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                     flag_found_moves = True
                     return moves
                 
-                print("NOT CONNECTED")
+                #print("NOT CONNECTED")
                 found = False
                 if found:
-                    print("found mOOVE")
+                    #print("found mOOVE")
                     current = moves[-1]
                     continue
                 for dir in range(6):
-                    start = moves[-1]
+                    start = current
+                    if moves != []:
+                        start = moves[-1]
                     while True:
                         test = _map.get_neighbor(start, dir)
                         if test is None:
                             break
-                        print("test,", test, f"({temp(test.row, test.column)})")
-                        if score(test) > score(start) or score(test) == -5:
+                        #print("test,", test, f"({temp(test.row, test.column)})")
+                        if score(test) > score(start) or score(test) in [-5, 0]:
                             break
                         if score(test) < score(start):
                             moves.append(test)
