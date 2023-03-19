@@ -34,8 +34,7 @@ def get_map(game_obj):
     return map.Map(tiles)
 
 
-def caluclate_togo(bee, enemy, _map):
-    # 
+
 
 def main():
     args = parse_arguments()
@@ -55,7 +54,8 @@ def main():
     bee = Player(game_obj.get("player1"))
 
     while True:
-        togo = [mapa.tiles[17,2], mapa.tiles[24,4], mapa.tiles[9,5], mapa.tiles[2,4]]
+        enemy_player = Player(game_obj.get("player2"))
+        togo = caluclate_togo(bee, enemy_player, mapa)
         for go in togo:
             while True:
                 if bee.x == go.row and bee.y == go.column:
@@ -73,7 +73,7 @@ def main():
                 amount = heuristics.count_tiles_between_two_tiles(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
                 
                 game_obj = move(direction, amount)
-                time.sleep(3)
+                time.sleep(2)
                 bee = Player(game_obj.get("player1"))
 
 if __name__ == "__main__":

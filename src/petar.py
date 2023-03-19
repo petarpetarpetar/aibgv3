@@ -139,9 +139,6 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data = False):
                         connected = True
                         break
                 
-                # print("moves: ", end=" ")
-                # [print(x, f"({temp(x.row, x.column)})", end=" |") for x in moves]
-
             if not connected:
                 
                 if score(cand) == -1:
