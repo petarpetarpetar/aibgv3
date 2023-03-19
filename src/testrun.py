@@ -35,16 +35,12 @@ def get_map(game_obj):
     return map.Map(tiles)
 
 
-<<<<<<< HEAD
-
-=======
 def caluclate_togo(bee, enemy, _map):
     pass
 
 
 def caluclate_togo(bee, enemy, _map):
-    # 
->>>>>>> cb19f116489ba60a29bb8ce715447ef3885a8dae
+    pass 
 
 def main():
     args = parse_arguments()
@@ -60,39 +56,43 @@ def main():
         enemy_player = player1
 
     print("gameId: ", game_obj.get("gameId"))
-    time.sleep(5)
+    time.sleep(2)
     bee = Player(game_obj.get("player1"))
 
     while True:
-        enemy_player = Player(game_obj.get("player2"))
-        togo = caluclate_togo(bee, enemy_player, mapa)
-        for go in togo:
-            while True:
-                if bee.x == go.row and bee.y == go.column:
-                    break
-                steps = run_BFS(mapa.tiles[bee.x, bee.y], go, mapa, (enemy_player.x, enemy_player.y))
+        steps = run_BFS(mapa.tiles[0, 0], mapa.tiles[24, 8], mapa, (enemy_player.x, enemy_player.y))
+        for step in steps:
+            print(step, end=" ")
+        break
+        # enemy_player = Player(game_obj.get("player2"))
+        # togo = caluclate_togo(bee, enemy_player, mapa)
+        # for go in togo:
+        #     while True:
+        #         if bee.x == go.row and bee.y == go.column:
+        #             break
+        #         steps = run_BFS(mapa.tiles[bee.x, bee.y], go, mapa, (enemy_player.x, enemy_player.y))
 
-                if mapa.tiles[bee.x, bee.y] in steps:
-                    steps.remove(mapa.tiles[bee.x, bee.y])
+        #         if mapa.tiles[bee.x, bee.y] in steps:
+        #             steps.remove(mapa.tiles[bee.x, bee.y])
                 
-                moves = steps[::-1]
-                #moves = moves[1:]
+        #         moves = steps[::-1]
+        #         #moves = moves[1:]
                 
-                bee = Player(game_obj.get("player1"))
+        #         bee = Player(game_obj.get("player1"))
 
-                for s in moves:
-                    print(s, end=" |")
-                time.sleep(1)
-                m = moves[0]
-                print(m)
-                direction = heuristics.get_direction(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
-                amount = heuristics.count_tiles_between_two_tiles(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
-                print("direction",direction)
-                print("amount",amount)
+        #         for s in moves:
+        #             print(s, end=" |")
+        #         time.sleep(1)
+        #         m = moves[0]
+        #         print(m)
+        #         direction = heuristics.get_direction(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
+        #         amount = heuristics.count_tiles_between_two_tiles(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
+        #         print("direction",direction)
+        #         print("amount",amount)
                 
-                game_obj = move(direction, amount)
-                time.sleep(2)
-                bee = Player(game_obj.get("player1"))
+        #         game_obj = move(direction, amount)
+        #         time.sleep(2)
+        #         bee = Player(game_obj.get("player1"))
 
 
 if __name__ == "__main__":

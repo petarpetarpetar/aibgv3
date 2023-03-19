@@ -43,10 +43,10 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data = False):
             for direction in range(6):
                 current = start
                 while True:  # dok ne naidjes na pond ili na cosak
+                    
                     current: Tile = _map.get_neighbor(current, direction)
                     if current is None:
                         break
-
                     if current.tile_content.item_type == ItemType.POND:
                         bfs[current.row, current.column] = -5
                         break
@@ -60,7 +60,7 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data = False):
                         new_tiles.append(current)
 
                     if current.row == end.row and current.column == end.column:
-                        # print(f"found end in {iteration}")
+                        # print(f"found end in {iteration}")fetch_bfs_data
                         if iteration == 1 or iteration == 0:
                             print(f"steps to end= {bfs[end.row, end.column]}")
                             if fetch_bfs_data:
@@ -72,6 +72,7 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data = False):
         next_iteration_tiles = new_tiles
         new_tiles = []
     print(f"steps to end= {bfs[end.row, end.column]}")
+    print(bfs)
     # BACKTRACKING
 
     num_steps = bfs[end.row, end.column]
@@ -92,6 +93,7 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data = False):
         definite = None
 
         if bfs[end.row, end.column] == 1:  # mozes odmah na pocetku da dodjes tu
+            
             potential = end
             flag_found_moves = True
             definite = potential
