@@ -21,7 +21,7 @@ class Tile:
             return False
 
     def __str__(self) -> str:
-        return f"{self.row} {self.column}"
+        return f"{self.row} {self.column} {self.tile_content.item_type}"
 
 
 class Map:
@@ -30,7 +30,7 @@ class Map:
         self.height, self.width = self.tiles.shape
 
     def get_neighbor_list(self, current_tile):
-        x, y = current_tile.x, current_tile.y
+        x, y = current_tile.row, current_tile.column
         nb.set_x_y(x, y)
         neighbors_position = [
             nb.neighbor_up_position(),

@@ -57,7 +57,7 @@ def main():
         enemy_player = player1
 
     print("gameId: ", game_obj.get("gameId"))
-    time.sleep(5)
+    time.sleep(2)
     bee = Player(game_obj.get("player1"))
 
     while True:

@@ -12,7 +12,7 @@ def get_tiles(first, second):
 
 
 def test_directions():
-    pairs = [[(1, 1), (3, 0)], [(0, 0), (1, 0)], [(2, 0), (4, 0)]]
+    pairs = [[(1, 1), (3, 0)], [(0, 0), (1, 0)], [(1, 0), (3, 0)]]
     for pair in pairs:
         first, second = pair
         start_tile, end_tile = get_tiles(first, second)
@@ -33,7 +33,7 @@ def init():
     global _map, our_player, enemy_player
     args = parse_arguments()
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
-    mapa = get_map(game_obj)
+    _map = get_map(game_obj)
     our_player, enemy_player = get_players(game_obj)
 
 

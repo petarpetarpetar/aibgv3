@@ -8,6 +8,7 @@ import map as game_map
 from player import Player
 from bestMoves import *
 from move import Move
+import hive_commands
 
 
 def parse_arguments():
@@ -43,6 +44,11 @@ def get_players(game_obj):
     return our_player, enemy_player
 
 
+def run_hive(player_, enemy_, map_):
+    hive_commands.get_data(player_, enemy_, map_)
+    hive_commands.calculate_togo()
+
+
 def main():
     args = parse_arguments()
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
@@ -50,6 +56,8 @@ def main():
     enemy_player_str = "player2" if our_player_str == "player1" else "player1"
     # TODO nas_potez(our_player, enemy_player, mapa)
     print("gameId: ", game_obj.get("gameId"))
+    our_player, enemy_player = get_players(game_obj)
+    run_hive(our_player, enemy_player, get_map(game_obj))
 
     while True:
         best_move = get_move(game_obj.copy(), our_player_str, enemy_player_str)
