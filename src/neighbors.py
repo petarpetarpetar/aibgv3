@@ -4,6 +4,12 @@ x = 0
 y = 0
 
 
+def y_out_of_bonds(y1):
+    if y1 == WIDTH and y1 % 2 == 0:
+        return True
+    return False
+
+
 def set_x_y(_x, _y):
     global x, y
     x = _x
@@ -36,7 +42,7 @@ def neighbor_upper_right_position():
     y1 = y
     if x % 2 == 1:
         y1 += 1
-    if x - 1 < 0 or y1 > WIDTH:
+    if x - 1 < 0 or y1 > WIDTH or y_out_of_bonds(y1):
         return None
     return x - 1, y1
 
@@ -54,7 +60,7 @@ def neighbor_down_right_position():
     y1 = y
     if x % 2 == 1:
         y1 += 1
-    if x + 1 > HEIGHT or y1 > WIDTH:
+    if x + 1 > HEIGHT or y1 > WIDTH or y_out_of_bonds(y1):
         return None
     else:
         return x + 1, y1
