@@ -21,8 +21,9 @@ from item_type import ItemType
 """
 
 
-def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
+def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data = False):
     next_iteration_tiles = [start]
+    north_remembers = start
     new_tiles = []
     moves=[end]
     bfs = np.full((27, 9), 0, dtype=int)
@@ -62,6 +63,8 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                         # print(f"found end in {iteration}")
                         if iteration == 1 or iteration == 0:
                             print(f"steps to end= {bfs[end.row, end.column]}")
+                            if fetch_bfs_data:
+                                return [current], score(end)
                             return [current]
                         found_end = True
                         break
@@ -93,7 +96,9 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
             flag_found_moves = True
             definite = potential
             print("pa mozes odma")
-            return definite
+            if fetch_bfs_data:
+                return [definite], score(end)    
+            return [definite]
         
 
         while not flag_found_moves:
@@ -127,6 +132,8 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                         moves.append(cand)
                         if score(cand) == -1:
                             flag_found_moves = True
+                            if fetch_bfs_data:
+                                return moves, score(end)
                             return moves
                         current = cand
                         connected = True
@@ -139,6 +146,8 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                 
                 if score(cand) == -1:
                     flag_found_moves = True
+                    if fetch_bfs_data:
+                        return moves, score(end)
                     return moves
                 
                 #print("NOT CONNECTED")
@@ -162,12 +171,15 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                             moves.append(test)
                             if score(cand) == -1:
                                 flag_found_moves = True
+                                if fetch_bfs_data:
+                                    return moves, score(end)
                                 return moves
                             found = True
                             break
 
                         start = test
-
+    if fetch_bfs_data:
+        return moves, score(end)
     return moves
 
 def check_path_pond(start: Tile, direction: int, step: int):

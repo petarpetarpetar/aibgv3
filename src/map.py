@@ -27,7 +27,7 @@ class Tile:
 class Map:
     def __init__(self, tiles):
         self.tiles = tiles
-        self.width, self.height = self.tiles.shape
+        self.height, self.width = self.tiles.shape
 
     def get_neighbor_list(self, current_tile):
         x, y = current_tile.x, current_tile.y

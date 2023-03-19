@@ -35,6 +35,13 @@ def get_map(game_obj):
     return map.Map(tiles)
 
 
+def caluclate_togo(bee, enemy, _map):
+    pass
+
+
+def caluclate_togo(bee, enemy, _map):
+    # 
+
 def main():
     args = parse_arguments()
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
@@ -53,25 +60,19 @@ def main():
     bee = Player(game_obj.get("player1"))
 
     while True:
-        togo = [mapa.tiles[17, 2], mapa.tiles[24, 4], mapa.tiles[9, 5], mapa.tiles[2, 4]]
-        # togo_honey = mapa.get_power_up_positions()[ItemType.SUPER_HONEY]
-        # togo_freeze = mapa.get_power_up_positions()[ItemType.FREEZE]
-        # togo_energy = mapa.get_power_up_positions()[ItemType.ENERGY]
-        # togo = togo_honey + togo_freeze + togo_energy
+        togo = [mapa.tiles[17,2], mapa.tiles[24,4], mapa.tiles[9,5], mapa.tiles[2,4]]
         for go in togo:
             while True:
                 if bee.x == go.row and bee.y == go.column:
                     break
-                print("bee", bee.x, bee.y)
-                print("go", go)
                 steps = run_BFS(mapa.tiles[bee.x, bee.y], go, mapa, (enemy_player.x, enemy_player.y))
 
                 if mapa.tiles[bee.x, bee.y] in steps:
                     steps.remove(mapa.tiles[bee.x, bee.y])
-
+                
                 moves = steps[::-1]
-                # moves = moves[1:]
-
+                #moves = moves[1:]
+                
                 bee = Player(game_obj.get("player1"))
 
                 for s in moves:
@@ -81,9 +82,9 @@ def main():
                 print(m)
                 direction = heuristics.get_direction(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
                 amount = heuristics.count_tiles_between_two_tiles(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
-                print("direction", direction)
-                print("amount", amount)
-
+                print("direction",direction)
+                print("amount",amount)
+                
                 game_obj = move(direction, amount)
                 time.sleep(3)
                 bee = Player(game_obj.get("player1"))

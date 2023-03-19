@@ -5,7 +5,7 @@ y = 0
 
 
 def y_out_of_bonds(y1):
-    if y1 == WIDTH and y1 % 2 == 0:
+    if y1 == WIDTH and x % 2 == 1:
         return True
     return False
 
