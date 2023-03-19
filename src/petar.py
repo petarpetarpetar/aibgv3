@@ -4,14 +4,14 @@ import numpy as np
 from map import Tile, Map
 from item_type import ItemType
 
-'''
+"""
 0 - gore
 1 - gore-desno
 2 - dole-desno
 3 - dole
 4 - dole-levo
 5 - gore-levo
-'''
+"""
 
 """
 @function matrix - racuna matricu polja 
@@ -38,14 +38,14 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data=False):
 
     found_end = False
 
-    for iteration in range(1, 10):
+    for iteration in range(1, 20):
         if found_end:
             break
         for start in next_iteration_tiles:
             for direction in range(6):
                 current = start
                 while True:  # dok ne naidjes na pond ili na cosak
-                    
+
                     current: Tile = _map.get_neighbor(current, direction)
                     if current is None:
                         break
@@ -78,11 +78,6 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data=False):
     # BACKTRACKING
 
     num_steps = bfs[end.row, end.column]
-    if num_steps <= 0:
-        print("cant get there or already there")
-        return None
-
-    num_steps = bfs[end.row, end.column]
     print(f"{num_steps=}")
     if num_steps <= 0:
         print("cant get there or already there")
@@ -94,13 +89,13 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data=False):
         definite = None
 
         if bfs[end.row, end.column] == 1:  # mozes odmah na pocetku da dodjes tu
-            
+
             potential = end
             flag_found_moves = True
             definite = potential
             print("pa mozes odma")
             if fetch_bfs_data:
-                return [definite], score(end)    
+                return [definite], score(end)
             return [definite]
 
         while not flag_found_moves:
@@ -118,7 +113,8 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data=False):
                     continue
 
                 if bfs[candidate.row, candidate.column] <= bfs[current.row, current.column] and bfs[
-                    candidate.row, candidate.column] not in [0, -5]:
+                    candidate.row, candidate.column
+                ] not in [0, -5]:
                     if candidate not in candidate_list and candidate not in visited:
                         candidate_list.append(candidate)
                         visited.append(candidate)
@@ -140,6 +136,9 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data=False):
                         current = cand
                         connected = True
                         break
+
+                # print("moves: ", end=" ")
+                # [print(x, f"({temp(x.row, x.column)})", end=" |") for x in moves]
 
             if not connected:
 

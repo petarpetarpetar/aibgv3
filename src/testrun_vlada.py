@@ -10,6 +10,7 @@ import time
 from item_type import ItemType
 from petar import run_BFS
 from player import Player
+from bestMoves import valid_from_tile, populate_item_type
 import heuristics
 
 
@@ -40,6 +41,8 @@ def main():
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
     mapa = get_map(game_obj)
     print("gameId: ", game_obj.get("gameId"))
+    our_player_str = "player1"
+    enemy_player_str = "player2"
 
     player1 = Player(game_obj.get("player1"))
     player2 = Player(game_obj.get("player2"))
@@ -47,10 +50,14 @@ def main():
     enemy_player = player2
     if player2.team_name == "xepoju":
         enemy_player = player1
+        our_player = player2
+        enemy_player_str = "player1"
+        our_player_str = "player2"
 
     print("gameId: ", game_obj.get("gameId"))
     time.sleep(5)
-    bee = Player(game_obj.get("player1"))
+    bee = Player(game_obj.get(our_player_str))
+    flowers = ["CHERRY_BLOSSOM", "ROSE", "LILAC", "SUNFLOWER"]
 
     while True:
         togo = [mapa.tiles[26, 0], mapa.tiles[22, 1], mapa.tiles[0, 8], mapa.tiles[4, 7]]
@@ -93,8 +100,9 @@ def main():
             # ide se u kosnicu ako ima dovoljno nektara
             if bee.energy < 5:
                 game_obj = skip_a_turn()
-                map = get_map(game_obj)
-                bee = Player(game_obj.get("player1"))
+                mapa = get_map(game_obj)
+                bee = Player(game_obj.get(our_player_str))
+                enemy_player = Player(game_obj.get(enemy_player_str))
 
             if bee.nectar >= 90:
                 go = mapa.tiles[bee.hive_x, bee.hive_y]
@@ -112,7 +120,8 @@ def main():
                     moves = steps[::-1]
                     # moves = moves[1:]
 
-                    bee = Player(game_obj.get("player1"))
+                    bee = Player(game_obj.get(our_player_str))
+                    enemy_player = Player(game_obj.get(enemy_player_str))
 
                     for s in moves:
                         print(s, end=" |")
@@ -124,21 +133,35 @@ def main():
                     print("direction", direction)
                     print("amount", amount)
 
-                    game_obj = move(direction, amount)
+                    if amount * 2 >= bee.energy:
+                        game_obj = skip_a_turn()
+                    else:
+                        game_obj = move(direction, amount)
                     mapa = get_map(game_obj)
-                    time.sleep(3)
-                    bee = Player(game_obj.get("player1"))
+                    time.sleep(0.1)
+                    bee = Player(game_obj.get(our_player_str))
+                    enemy_player = Player(game_obj.get(enemy_player_str))
 
                 game_obj = feed_bee_with_nectar((100 - bee.energy) / 2)
                 game_obj = convert_nectar_to_honey(5)
-                bee = Player(game_obj.get("player1"))
+                mapa = get_map(game_obj)
+                bee = Player(game_obj.get(our_player_str))
+                enemy_player = Player(game_obj.get(enemy_player_str))
 
             # inace ide se na random polje koje nije pond
             else:
                 while True:
                     go: map.Tile = mapa.tiles[random.randint(0, mapa.height - 1), random.randint(0, mapa.width - 1)]
 
-                    if go is not None and go.tile_content.item_type != ItemType.POND and go.tile_content.item_type != ItemType.HIVE:
+                    if go.column == 8 and go.row % 2 != 0:
+                        continue
+
+                    if (
+                        go is not None
+                        and go.tile_content.item_type != ItemType.POND
+                        and go.tile_content.item_type != ItemType.HIVE
+                        and go.tile_content.item_type != ItemType.EMPTY
+                    ):
                         break
 
                 while True:
@@ -157,7 +180,8 @@ def main():
                     moves = steps[::-1]
                     # moves = moves[1:]
 
-                    bee = Player(game_obj.get("player1"))
+                    bee = Player(game_obj.get(our_player_str))
+                    enemy_player = Player(game_obj.get(enemy_player_str))
 
                     for s in moves:
                         print(s, end=" |")
@@ -169,10 +193,34 @@ def main():
                     print("direction", direction)
                     print("amount", amount)
 
-                    game_obj = move(direction, amount)
+                    if amount * 2 >= bee.energy:
+                        game_obj = skip_a_turn()
+                    else:
+                        valid_from_tile_arr = valid_from_tile({"row": our_player.x, "column": our_player.y}, direction)
+                        populate_item_type(game_obj, valid_from_tile_arr)
+                        current_nectar = bee.nectar
+                        new_amount = 0
+
+                        for valid_tile in valid_from_tile_arr:
+                            if valid_tile.get("tileContent").get("itemType") in flowers:
+                                current_nectar += valid_tile.get("tileContent").get("numOfItems")
+
+                            new_amount += 1
+                            if current_nectar >= 100 or new_amount >= amount:
+                                break
+
+                        if new_amount == 0:
+                            new_amount = amount
+
+                        if new_amount * 2 >= bee.energy:
+                            game_obj = skip_a_turn()
+
+                        print(f"new_amount {new_amount}, amount {amount}")
+                        game_obj = move(direction, new_amount)
                     mapa = get_map(game_obj)
                     time.sleep(0.1)
-                    bee = Player(game_obj.get("player1"))
+                    bee = Player(game_obj.get(our_player_str))
+                    enemy_player = Player(game_obj.get(enemy_player_str))
 
 
 if __name__ == "__main__":
