@@ -2,13 +2,13 @@ import random
 from main import *
 import heuristics
 
-mapa = object
+_map = object
 our_player = object
 enemy_player = object
 
 
 def get_tiles(first, second):
-    return mapa.tiles[first], mapa.tiles[second]
+    return _map.tiles[first], _map.tiles[second]
 
 
 def test_directions():
@@ -25,12 +25,12 @@ def test_directions():
 
 
 def test_get_dict():
-    dic = mapa.get_power_up_positions()
+    dic = _map.get_power_up_positions()
     return
 
 
 def init():
-    global mapa, our_player, enemy_player
+    global _map, our_player, enemy_player
     args = parse_arguments()
     game_obj = init_game(args.train, args.bot_vs_bot, args.game_id, args.player_id)
     mapa = get_map(game_obj)
