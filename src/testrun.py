@@ -12,6 +12,7 @@ from petar import run_BFS
 from player import Player
 import heuristics
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("train", type=bool)
@@ -34,7 +35,16 @@ def get_map(game_obj):
     return map.Map(tiles)
 
 
+<<<<<<< HEAD
 
+=======
+def caluclate_togo(bee, enemy, _map):
+    pass
+
+
+def caluclate_togo(bee, enemy, _map):
+    # 
+>>>>>>> cb19f116489ba60a29bb8ce715447ef3885a8dae
 
 def main():
     args = parse_arguments()
@@ -61,20 +71,29 @@ def main():
                 if bee.x == go.row and bee.y == go.column:
                     break
                 steps = run_BFS(mapa.tiles[bee.x, bee.y], go, mapa, (enemy_player.x, enemy_player.y))
-                
+
                 if mapa.tiles[bee.x, bee.y] in steps:
                     steps.remove(mapa.tiles[bee.x, bee.y])
                 
+                moves = steps[::-1]
+                #moves = moves[1:]
+                
                 bee = Player(game_obj.get("player1"))
-                
-                
-                m = steps[-1]
+
+                for s in moves:
+                    print(s, end=" |")
+                time.sleep(1)
+                m = moves[0]
+                print(m)
                 direction = heuristics.get_direction(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
                 amount = heuristics.count_tiles_between_two_tiles(mapa.tiles[bee.x, bee.y], mapa.tiles[m.row, m.column])
+                print("direction",direction)
+                print("amount",amount)
                 
                 game_obj = move(direction, amount)
                 time.sleep(2)
                 bee = Player(game_obj.get("player1"))
+
 
 if __name__ == "__main__":
     main()
