@@ -27,10 +27,10 @@ class Tile:
 class Map:
     def __init__(self, tiles):
         self.tiles = tiles
-        self.width, self.height = self.tiles.shape
+        self.height, self.width = self.tiles.shape
 
     def get_neighbor_list(self, current_tile):
-        x, y = current_tile.x, current_tile.y
+        x, y = current_tile.row, current_tile.column
         nb.set_x_y(x, y)
         neighbors_position = [
             nb.neighbor_up_position(),

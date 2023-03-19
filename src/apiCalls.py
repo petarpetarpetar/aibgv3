@@ -49,7 +49,7 @@ def move(direction: Direction, distance: int):
     """
     body = {"playerId": player_id, "gameId": game_id, "direction": direction.value, "distance": distance}
     res = req.post(url + "move", json=body)
-    #print(res.json())
+    # print(res.json())
     return res.json()
 
 
