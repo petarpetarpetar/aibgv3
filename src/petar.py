@@ -21,18 +21,21 @@ from item_type import ItemType
 """
 
 
-def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
+def run_BFS(start: Tile, end: Tile, _map: Map, enemy, fetch_bfs_data=False):
     next_iteration_tiles = [start]
+    north_remembers = start
     new_tiles = []
-    moves=[end]
+    moves = [end]
     bfs = np.full((27, 9), 0, dtype=int)
     bfs[start.row, start.column] = -1
     visited = []
 
-    def temp(x,y):
-        return bfs[x,y]
+    def temp(x, y):
+        return bfs[x, y]
+
     def score(a):
         return bfs[a.row, a.column]
+
     found_end = False
 
     for iteration in range(1, 10):
@@ -62,6 +65,8 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                         # print(f"found end in {iteration}")
                         if iteration == 1 or iteration == 0:
                             print(f"steps to end= {bfs[end.row, end.column]}")
+                            if fetch_bfs_data:
+                                return [current], score(end)
                             return [current]
                         found_end = True
                         break
@@ -75,7 +80,6 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
     if num_steps <= 0:
         print("cant get there or already there")
         return None
-
 
     num_steps = bfs[end.row, end.column]
     print(f"{num_steps=}")
@@ -93,8 +97,9 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
             flag_found_moves = True
             definite = potential
             print("pa mozes odma")
-            return definite
-        
+            if fetch_bfs_data:
+                return [definite], score(end)
+            return [definite]
 
         while not flag_found_moves:
             connected = False
@@ -119,7 +124,7 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                 else:
                     pass
                     # print("shit")
-                
+
                 # print("candidate_list: ", end=" ")
                 for cand in candidate_list:
                     print(cand, f"({temp(cand.row, cand.column)})", end=" ||")
@@ -127,24 +132,28 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                         moves.append(cand)
                         if score(cand) == -1:
                             flag_found_moves = True
+                            if fetch_bfs_data:
+                                return moves, score(end)
                             return moves
                         current = cand
                         connected = True
                         break
-                
+
                 # print("moves: ", end=" ")
                 # [print(x, f"({temp(x.row, x.column)})", end=" |") for x in moves]
 
             if not connected:
-                
+
                 if score(cand) == -1:
                     flag_found_moves = True
+                    if fetch_bfs_data:
+                        return moves, score(end)
                     return moves
-                
-                #print("NOT CONNECTED")
+
+                # print("NOT CONNECTED")
                 found = False
                 if found:
-                    #print("found mOOVE")
+                    # print("found mOOVE")
                     current = moves[-1]
                     continue
                 for dir in range(6):
@@ -155,20 +164,24 @@ def run_BFS(start: Tile, end: Tile, _map: Map, enemy):
                         test = _map.get_neighbor(start, dir)
                         if test is None:
                             break
-                        #print("test,", test, f"({temp(test.row, test.column)})")
+                        # print("test,", test, f"({temp(test.row, test.column)})")
                         if score(test) > score(start) or score(test) in [-5, 0]:
                             break
                         if score(test) < score(start):
                             moves.append(test)
                             if score(cand) == -1:
                                 flag_found_moves = True
+                                if fetch_bfs_data:
+                                    return moves, score(end)
                                 return moves
                             found = True
                             break
 
                         start = test
-
+    if fetch_bfs_data:
+        return moves, score(end)
     return moves
+
 
 def check_path_pond(start: Tile, direction: int, step: int):
     curr = start

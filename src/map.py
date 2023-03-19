@@ -21,7 +21,7 @@ class Tile:
             return False
 
     def __str__(self) -> str:
-        return f"{self.row} {self.column}"
+        return f"{self.row} {self.column} {self.tile_content.item_type}"
 
 
 class Map:
